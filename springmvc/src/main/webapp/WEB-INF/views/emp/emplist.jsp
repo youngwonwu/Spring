@@ -6,11 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<style>
-ul, li {
-	boader: solid 1px black
-}
-</style>
 </head>
 <body>
 

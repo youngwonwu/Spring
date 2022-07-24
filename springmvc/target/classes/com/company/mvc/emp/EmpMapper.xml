@@ -95,8 +95,8 @@
 	<update id="UpdateEmp">
 		UPDATE EMPLOYEES SET 
 				first_name = #{firstName}, 
-				last_name#{lastName}, 
-				hire_date#{hireDate}, 
+				last_name = #{lastName}, 
+				hire_date = #{hireDate}, 
 				email = #{email}, 
 				job_id = #{jobId} 
 		WHERE EMPLOYEE_ID = #{employeeId}
