@@ -11,10 +11,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+//@RequestMapping("/board/*")
 public class BoardController {
 	
 	@Autowired BoardMapper mapper;
 	Logger logger = LoggerFactory.getLogger(BoardController.class);
+	
+	//상세보기(단건조회)
+	@RequestMapping("/get/{bno}")
+	public String boardGet(BoardVO vo, Model model, @PathVariable String bno) {
+		vo.setBno(bno);
+		model.addAttribute("board", mapper.getBoard(vo));
+		return "board/boardGet";
+	}
 	
 	//목록
 	@RequestMapping("/boardList")
@@ -47,6 +56,7 @@ public class BoardController {
 	//수정 처리
 	@PostMapping("/boardUpdate")
 	public String boardUpdateProc(BoardVO vo) {
+		System.out.println(vo);
 		mapper.updateBoard(vo);
 		return "redirect:boardList";
 	}
@@ -54,7 +64,7 @@ public class BoardController {
 	//삭제
 	@RequestMapping("/boardDelete")
 	public String boardDelete(BoardVO vo) {
-		mapper.updateBoard(vo);
+		mapper.deleteBoard(vo);
 		return "redirect:boardList";
 	}
 
