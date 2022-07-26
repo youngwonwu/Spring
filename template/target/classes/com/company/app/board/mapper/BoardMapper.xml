@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.app.board.mapper.BoardMapper">
+
+	<select id="getBoard" resultType="BoardVO">
+		SELECT * FROM TBL_BOARD WHERE BNO = #{bno}
+	</select>
+	
+	<sql id="criteria">	<!-- 중복되는 sql문을 따로 만들어서 include해 주면 됨 -->
+		<if test="keyword != null and keyword != ''">
+		    and ${type} = #{keyword}
+		</if>
+	</sql>
+	<select id="getBoardList" resultType="BoardVO">
+		SELECT *
+		FROM (
+		        SELECT /*+ INDEX_DESC( TBL_BOARD PK_BOARD)*/  ROWNUM RN, A.* 
+		        FROM TBL_BOARD A
+			    <![CDATA[ WHERE ROWNUM <= #{pageNum} * #{amount} ]]>
+		        <include refid="criteria"></include>
+		    )
+		WHERE RN > (#{pageNum} -1) * #{amount}
+	</select>
+	<select id="getTotal" resultType="int">
+		SELECT COUNT(*)FROM TBL_BOARD
+		<where>
+			<include refid="criteria"></include>
+		</where>
+	</select>
+	
+	<insert id="insertBoard">
+		
+		INSERT INTO TBL_BOARD(BNO, TITLE, CONTENT, WRITER)
+		VALUES (seq_board.nextval, #{title}, #{content}, #{writer})
+	</insert>
+	
+	<update id="updateBoard">
+		UPDATE TBL_BOARD SET 
+				title = #{title},
+				writer = #{writer},
+				content = #{content},
+				updateDate = sysdate
+		WHERE BNO = #{bno}
+	</update>
+	
+	<delete id="deleteBoard">
+		DELETE FROM TBL_BOARD WHERE BNO = #{bno}
+	</delete>
+
+</mapper>
