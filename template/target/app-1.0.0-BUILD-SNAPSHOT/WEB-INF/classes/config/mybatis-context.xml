@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- dao 대신에 mapper 인터페이스를 만듬 -> 상속 받고 구현클래스(프록시클래스) @Repository 빈등록까지 해줌 -->
+	<mybatis-spring:scan base-package="com.company.app.**.mapper" />	<!-- mapper 자바 경로를 찾아가는 것 -->
+	
+	<!-- mybatis SqlSessionFactory -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />	<!-- ref는 객체가 들어가는 것 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>	<!-- 값을 넣을꺼면 value로 -->
+		<property name="mapperLocations" value="classpath*:com/company/app/**/mapper/*.xml"></property>
+	</bean>
+	
+</beans>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" 
+	"http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p: %d{HH:mm} %c(%M %L) - %m%n" />
+		</layout>
+	</appender>
+	
+	<!-- Application Loggers -->
+	<logger name="com.company.mvc">
+		<level value="info" />	<!-- value="warn" -->
+	</logger>
+	
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework.core">
+		<level value="info" />
+	</logger>
+	
+	<logger name="org.springframework.beans">
+		<level value="info" />
+	</logger>
+	
+	<logger name="org.springframework.context">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.web">
+		<level value="info" />
+	</logger>
+	
+	<logger name="jdbc.audit">
+		<level value="warn" />
+	</logger>
+	<logger name="jdbc.resultset">
+		<level value="warn" />
+	</logger>
+
+	<!-- Root Logger --><!-- 로그 레벨 fatal < error < warn < info < debug < trace 순 value에 이들중 하나 적어 놓으면 뒤에꺼는 안나온다-->
+	<!-- 루트 로그는 제일 마지막에 와야한다 -->
+	<root>
+		<priority value="info" />
+		<appender-ref ref="console" />
+	</root>
+	
+</log4j:configuration>
