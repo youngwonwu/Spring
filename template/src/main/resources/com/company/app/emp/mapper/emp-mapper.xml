@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.app.emp.mapper.EmpMapper">
+	
+	<!-- id값이랑 resultType이 중요하다 꼭 적어야함  -->
+	<!-- resultType="map"으로 하면 empmapper.java, empmappertest에 map으로 바꿔줘야한다 -->
+	<select id="getEmp" resultType="empVO">	<!-- mybatis-config의 typeAliases에 지정해 둬서 emp로 하면 된다, package로도 지정해서 EmpVO로 해도 됨 -->
+		SELECT * FROM EMPLOYEES WHERE EMPLOYEE_ID=#{employeeId}
+	</select>
+	<!-- 
+		SELECT first_name "firstName", last_name "lastName" FROM EMPLOYEES WHERE EMPLOYEE_ID=#{employeeId}
+		SELECT first_name || last_name "name" FROM EMPLOYEES WHERE EMPLOYEE_ID=#{employeeId}
+	 -->
+	 
+	<select id="getEmpList" resultType="EmpVO">
+		SELECT * FROM EMPLOYEES ORDER BY EMPLOYEEID
+	</select>
+	
+	<select id="getEmpByDept" parameterType="empVO" resultType="EmpVO">
+		SELECT * 
+		FROM EMPLOYEES 
+		<where>
+		<!-- 
+			이거 못 했음
+			<if >
+				departmet_id = #{deaprtmentId}
+			</if>
+			<if>
+				<for></for>
+			</if>
+		 -->
+		 
+		</where>
+		ORDER BY EMPLOYEEID
+	</select>
+	
+	<!-- 	
+	<insert id="InsertEmp">
+		insert into employees values (employees_seq.nextval, #{firstName}, #{lastName}, #{hireDate}, #{email}, #{jobId})
+	</insert>
+	 -->
+	<insert id="InsertEmp">
+		<!-- 시퀀스가 없으면 이렇게 -->
+		<selectKey	keyProperty="employeeId" order="BEFORE" resultType="string">	
+			select nvl(max(employee_id),0)+1 from employees
+		</selectKey>
+		INSERT INTO 
+			EMPLOYEES (
+				EMPLOYEE_ID,
+				FIRST_NAME,
+				LAST_NAME,
+				HIRE_DATE,
+				EMAIL,
+				JOB_ID
+			) 
+			VALUES (
+				#{employeeId}, 
+				#{firstName}, 
+				#{lastName}, 
+				#{hireDate}, 
+				#{email}, 
+				#{jobId}
+			)
+	</insert>
+	
+	<select id="getEmpReqList" parameterType="empVO" resultType="EmpVO">
+		SELECT * 
+		FROM EMPLOYEES 
+		<where>
+			<if test="employeeId != null and employeeId != ''">
+				AND EMPLOYEE_ID = #{employeeId}
+			</if>
+			
+			<if test="depts != null ">
+				AND DEPARTMENT_ID IN
+				<foreach item="dept" collection="depts" open="(" separator="," close=")">
+					#{dept}
+				</foreach>
+			</if>
+			 
+			<if test="jobId != null and jobId != ''">
+				AND JOB_ID = #{jobId}
+			</if>
+			<if test="sdt != null">
+				AND HIRE_DATE >= #{sdt}
+			</if>
+			<if test="edt != null">
+			 	<![CDATA[ and hire_date <= #{edt}  ]]>
+			</if>
+		 
+		</where>
+		ORDER BY EMPLOYEE_ID
+	</select>
+	
+	<update id="UpdateEmp">
+		UPDATE EMPLOYEES SET 
+				first_name = #{firstName}, 
+				last_name = #{lastName}, 
+				hire_date = #{hireDate}, 
+				email = #{email}, 
+				job_id = #{jobId} 
+		WHERE EMPLOYEE_ID = #{employeeId}
+	</update>
+	
+	<delete id="deleteEmp">
+		DELETE FROM EMPLOYEES WHERE EMPLOYEE_ID = #{employeeId}
+	</delete>
+</mapper>
